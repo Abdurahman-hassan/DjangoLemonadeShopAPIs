@@ -5,12 +5,14 @@ from rest_framework import serializers
 from LittlelemonAPI.models import MenuItem, Category
 
 
-# class MenuItemSerializerManual(serializers.Serializer):
-#     id = serializers.IntegerField(read_only=True)
-#     title = serializers.CharField(max_length=255)
-#     price = serializers.DecimalField(max_digits=6, decimal_places=2)
-#     inventory = serializers.IntegerField()
-#
+class MenuItemSerializerManual(serializers.Serializer):
+    id = serializers.IntegerField()
+    title = serializers.CharField(max_length=2)
+
+    # price = serializers.DecimalField(max_digits=6, decimal_places=2)
+    # inventory = serializers.IntegerField()
+
+
 # def create(self, validated_data):
 #     return MenuItem.objects.create(**validated_data)
 #
@@ -60,7 +62,6 @@ class MenuItemSerializer(serializers.ModelSerializer):
     # add a new method to the serializer
     def claculate_tax(self, product: MenuItem):
         return product.price * Decimal(1.1)
-
 
 # or we can use HyperlinkedModelSerializer
 # class MenuItemSerializer(serializers.HyperlinkedModelSerializer):
