@@ -10,7 +10,17 @@ from LittlelemonAPI.serializers import (MenuItemSerializer, CategorySerializer,
                                         )
 
 
-# Create your views here.
+# 1- The first view
+# Using generics to create the views
+class MenuItemView(generics.ListCreateAPIView):
+    queryset = MenuItem.objects.all()
+    serializer_class = MenuItemSerializer
+
+
+# 2- The second view
+class SingleMenuItemView(generics.RetrieveUpdateAPIView, generics.DestroyAPIView):
+    queryset = MenuItem.objects.all()
+    serializer_class = MenuItemSerializer
 
 # @api_view()
 # def menu_items(request):
@@ -77,12 +87,3 @@ def category_detail(request, pk):
     serialized_category = CategorySerializer(category)
     return Response(serialized_category.data)
 
-
-class MenuItemView(generics.ListCreateAPIView):
-    queryset = MenuItem.objects.all()
-    serializer_class = MenuItemSerializer
-
-
-class SingleMenuItemView(generics.RetrieveUpdateAPIView, generics.DestroyAPIView):
-    queryset = MenuItem.objects.all()
-    serializer_class = MenuItemSerializer
