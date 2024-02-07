@@ -6,7 +6,7 @@ from rest_framework.status import HTTP_201_CREATED
 
 from LittlelemonAPI.models import MenuItem, Category
 from LittlelemonAPI.serializers import (MenuItemSerializer, CategorySerializer,
-    # MenuItemSerializerManual,
+                                        MenuItemSerializerManual,
                                         )
 
 
@@ -22,16 +22,21 @@ class SingleMenuItemView(generics.RetrieveUpdateAPIView, generics.DestroyAPIView
     queryset = MenuItem.objects.all()
     serializer_class = MenuItemSerializer
 
-# @api_view()
-# def menu_items(request):
-#     menu_items = MenuItem.objects.all()
-#     # return Response(menu_items.values())
-#
-#     # many=True is used when we want to serialize a queryset
-#     # this is essentially when we convert a list of objects into JSON
-#     serializer = MenuItemSerializerManual(menu_items, many=True)
-#     return Response(serializer.data)
-#
+
+# 3- The third view
+@api_view()
+def menu_items_basic_fetch_data(request):
+    # using a model directly
+    # menu_items = MenuItem.objects.all()
+    # return Response(menu_items.values())
+
+    # using a serializer
+    items = MenuItem.objects.all()
+    # many=True is used when we want to serialize a queryset
+    # this is essentially when we convert a list of objects into JSON
+    serializer_item = MenuItemSerializerManual(items, many=True)
+    return Response(serializer_item.data)
+
 # @api_view()
 # def single_item(request, pk):
 #     menu_item = MenuItem.objects.get(pk=pk)
@@ -86,4 +91,3 @@ def category_detail(request, pk):
     category = get_object_or_404(Category, pk=pk)
     serialized_category = CategorySerializer(category)
     return Response(serialized_category.data)
-
