@@ -4,13 +4,18 @@ from LittlelemonAPI.views import (
     MenuItemView,
     SingleMenuItemView,
     category_detail,
-    menu_items, single_item
+    menu_items,
+    single_item,
+    menu_items_basic_fetch_data
 )
 
 urlpatterns = [
-
+    # class-based views GenericAPIViews
     path('menu-items', MenuItemView.as_view(), name='menu-items'),
     path('menu-items/<int:pk>', SingleMenuItemView.as_view(), name='single-menu-item'),
+
+    # function-based views
+    path('menu-items-basic', menu_items_basic_fetch_data, name='menu-items-basic'),
 
     path('menu-items-apiview', menu_items, name='menu-items-api-view'),
     path('menu-items-apiview/<int:pk>', single_item, name='single-menu-item-api-view'),
