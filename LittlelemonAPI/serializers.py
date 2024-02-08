@@ -71,10 +71,13 @@ class MenuItemSerializerAutomatic(serializers.ModelSerializer):
     """
     This is a serializer to get all the items using the model serializer
     """
-    # change the name of the field we should add it into fields
+    # change the name of the field in the serializer
+    # it will be stock instead of inventory in the json response
+    # {"title": "test_title", "price": "12", "stock": "1", "price_after_tax": 2.0, "category": 1}
+    # we should mention the source of the original field "inventory"
     stock = serializers.IntegerField(source='inventory')
-    # add a method to the serializer
-    price_after_tax = serializers.SerializerMethodField(method_name='claculate_tax')
+    # add a method to the serializer, add a new field to the serializer
+    price_after_tax = serializers.SerializerMethodField(method_name='calculate_tax')
     # add a field from a related model
     # instead of using the id of the category -> 'category' : 1 by default
     # it will be 'category' : 'title'
@@ -101,7 +104,7 @@ class MenuItemSerializerAutomatic(serializers.ModelSerializer):
         # depth = 1
 
     # add a new method to the serializer
-    def claculate_tax(self, product: MenuItem):
+    def calculate_tax(self, product: MenuItem):
         return product.price * Decimal(1.1)
 
 # or we can use HyperlinkedModelSerializer
