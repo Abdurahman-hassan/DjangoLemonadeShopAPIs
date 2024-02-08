@@ -90,11 +90,11 @@ class MenuItemSerializerAutomatic(serializers.ModelSerializer):
     # and show it in the json response
     # we can avoid that by re-name the field to category
     category_str = serializers.StringRelatedField(source='category')
-    category_hyperlink = serializers.HyperlinkedRelatedField(
-        queryset= Category.objects.all(),
-        view_name='category-detail',
-        source='category'
-    )
+    # category_hyperlink = serializers.HyperlinkedRelatedField(
+    #     queryset= Category.objects.all(),
+    #     view_name='category-detail',
+    #     source='category'
+    # )
     # we will use a nested serializer
     category = CategorySerializer(read_only=True)
     category_id = serializers.IntegerField(write_only=True)
@@ -118,8 +118,9 @@ class MenuItemSerializerAutomatic(serializers.ModelSerializer):
                   'price', 'stock',
                   'price_after_tax',
                   'category_str',
-                  'category_hyperlink',
-                  'category', 'category_id']
+                  # 'category_hyperlink',
+                  'category_id',
+                  'category']
 
         # instead of using categorySerializer() we can use the depth option
         # all relationships in this serializer will display every field related to that model
