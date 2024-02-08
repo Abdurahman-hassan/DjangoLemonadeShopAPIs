@@ -10,20 +10,20 @@ from LittlelemonAPI.serializers import (MenuItemSerializer, CategorySerializer,
                                         )
 
 
-# 1- The first view
-# Using generics to create the views
+# 1- The first view to get all items
+# Using generics to create, List data
 class MenuItemView(generics.ListCreateAPIView):
     queryset = MenuItem.objects.all()
     serializer_class = MenuItemSerializer
 
 
-# 2- The second view
+# 2- The second view to get a single item
 class SingleMenuItemView(generics.RetrieveUpdateAPIView, generics.DestroyAPIView):
     queryset = MenuItem.objects.all()
     serializer_class = MenuItemSerializer
 
 
-# 3- The third view
+# 3- The third view to get all items
 @api_view()
 def menu_items_basic_fetch_data(request):
     # using a model directly
@@ -37,12 +37,14 @@ def menu_items_basic_fetch_data(request):
     serializer_item = MenuItemSerializerManual(items, many=True)
     return Response(serializer_item.data)
 
-# @api_view()
-# def single_item(request, pk):
-#     menu_item = MenuItem.objects.get(pk=pk)
-#     # we didn't use many=True because we are only serializing one object
-#     serializer = MenuItemSerializerManual(menu_item)
-#     return Response(serializer.data)
+
+# 4- The fourth view to get a single item
+@api_view()
+def single_item_basic_fetch_data(request, pk):
+    menu_item = MenuItem.objects.get(pk=pk)
+    # we didn't use many=True because we are only serializing one object not a queryset
+    serializer = MenuItemSerializerManual(menu_item)
+    return Response(serializer.data)
 
 
 @api_view()

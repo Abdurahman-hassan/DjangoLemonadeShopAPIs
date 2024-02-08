@@ -15,10 +15,10 @@ urlpatterns = [
     path('menu-items/<int:pk>', SingleMenuItemView.as_view(), name='single-menu-item'),
 
     # function-based views
-    path('menu-items-basic', menu_items_basic_fetch_data, name='menu-items-basic'),
+    path('menu-items-basic', menu_items_basic_fetch_data, name='multi-menu-items-api-view'),
+    path('menu-items-basic/<int:pk>', single_item, name='single-menu-item-api-view'),
 
     path('menu-items-apiview', menu_items, name='menu-items-api-view'),
-    path('menu-items-apiview/<int:pk>', single_item, name='single-menu-item-api-view'),
     # There is a convention you must follow when you create this view name.
     # The rule is that you have to add -detail after the related field name,
     # which is category in the MenuItemSerializer.
