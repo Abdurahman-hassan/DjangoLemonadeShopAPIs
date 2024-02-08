@@ -41,7 +41,9 @@ def menu_items_basic_fetch_data(request):
 # 4- The fourth view to get a single item
 @api_view()
 def single_item_basic_fetch_data(request, pk):
-    menu_item = MenuItem.objects.get(pk=pk)
+    # menu_item = MenuItem.objects.get(pk=pk)
+    # we use get_object_or_404 to return a 404 response if the object is not found instead of raising an exception
+    menu_item = get_object_or_404(MenuItem, pk=pk)
     # we didn't use many=True because we are only serializing one object not a queryset
     serializer = MenuItemSerializerManual(menu_item)
     return Response(serializer.data)

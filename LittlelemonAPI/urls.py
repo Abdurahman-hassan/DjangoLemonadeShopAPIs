@@ -6,7 +6,7 @@ from LittlelemonAPI.views import (
     category_detail,
     menu_items,
     single_item,
-    menu_items_basic_fetch_data
+    menu_items_basic_fetch_data, single_item_basic_fetch_data
 )
 
 urlpatterns = [
@@ -16,7 +16,7 @@ urlpatterns = [
 
     # function-based views
     path('menu-items-basic', menu_items_basic_fetch_data, name='multi-menu-items-api-view'),
-    path('menu-items-basic/<int:pk>', single_item, name='single-menu-item-api-view'),
+    path('menu-items-basic/<int:pk>', single_item_basic_fetch_data, name='single-menu-item-api-view'),
 
     path('menu-items-apiview', menu_items, name='menu-items-api-view'),
     # There is a convention you must follow when you create this view name.
