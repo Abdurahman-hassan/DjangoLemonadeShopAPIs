@@ -71,12 +71,19 @@ def menu_items(request):
 
 
 @api_view(['GET', 'POST'])
-def single_item(request, pk):
+def menu_items_save_to_modelDserializer(request, pk=None):
     if request.method == 'GET':
-        menu_item = get_object_or_404(MenuItem, pk=pk)
-        # we didn't use many=True because we are only serializing one object
-        serializer = MenuItemSerializerAutomatic(menu_item)
-        return Response(serializer.data)
+        if pk:
+            menu_item = get_object_or_404(MenuItem, pk=pk)
+            # we didn't use many=True because we are only serializing one object
+            serializer = MenuItemSerializerAutomatic(menu_item)
+            return Response(serializer.data)
+        else:
+            menu_items = MenuItem.objects.all()
+            # many=True is used when we want to serialize a queryset
+            # this is essentially when we convert a list of objects into JSON
+            serializer = MenuItemSerializerAutomatic(menu_items, many=True)
+            return Response(serializer.data)
     if request.method == 'POST':
         serializer = MenuItemSerializerAutomatic(data=request.data)
         # we can use raise_exception=True to raise an exception if the serializer is not valid
@@ -88,6 +95,10 @@ def single_item(request, pk):
         # or we can use serializer.save() to save the data
         serializer.save()
         # we can't access the data if the data is not saved
+        # we can access the data after saving it
+        validated_data = serializer.validated_data # this will return a dictionary of the validated data
+        # # we can access the data after saving it
+        print(validated_data)
         return Response(serializer.data, status=HTTP_201_CREATED)
 
 

@@ -5,7 +5,7 @@ from LittlelemonAPI.views import (
     SingleMenuItemView,
     category_detail,
     menu_items,
-    single_item,
+    menu_items_save_to_modelDserializer,
     menu_items_basic_fetch_data, single_item_basic_fetch_data
 )
 
@@ -25,6 +25,9 @@ urlpatterns = [
     # This is why the view name was category-detail in this code.
     # If the related field name was user, the view name would be user-detail.
     path('category/<int:pk>', category_detail, name='category-detail'),
+
+    path('menu-items-save', menu_items_save_to_modelDserializer, name='menu-items-save'),
+    path('menu-items-save/<int:pk>', menu_items_save_to_modelDserializer, name='menu-items-save'),
 
     path('__debug__/', include('debug_toolbar.urls')),
 ]
