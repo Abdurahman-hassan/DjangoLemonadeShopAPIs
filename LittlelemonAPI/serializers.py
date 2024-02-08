@@ -86,8 +86,15 @@ class MenuItemSerializerAutomatic(serializers.ModelSerializer):
     # this will return the __str__ method of the model
     # we need also use select_related in the view to get the category in the same query,
     # not in a separate query for each menu item
-    # category = serializers.StringRelatedField()
-
+    # we need to add source='category' to get the category field from the related model
+    # and show it in the json response
+    # we can avoid that by re-name the field to category
+    category_str = serializers.StringRelatedField(source='category')
+    category_hyperlink = serializers.HyperlinkedRelatedField(
+        queryset= Category.objects.all(),
+        view_name='category-detail',
+        source='category'
+    )
     # we will use a nested serializer
     category = CategorySerializer(read_only=True)
     category_id = serializers.IntegerField(write_only=True)
@@ -99,11 +106,20 @@ class MenuItemSerializerAutomatic(serializers.ModelSerializer):
     #     # if our view name url was category-detail we don't need to use this
     # )
 
+    # or we can use HyperlinkedModelSerializer instead of ModelSerializer
+    # class MenuItemSerializer(serializers.HyperlinkedModelSerializer):
+    #     class Meta:
+    #         model = MenuItem
+    #         fields = ('id', 'title', 'price', 'inventory', 'category')
+
     class Meta:
         model = MenuItem
         fields = ['id', 'title',
                   'price', 'stock',
-                  'price_after_tax', 'category', 'category_id']
+                  'price_after_tax',
+                  'category_str',
+                  'category_hyperlink',
+                  'category', 'category_id']
 
         # instead of using categorySerializer() we can use the depth option
         # all relationships in this serializer will display every field related to that model
@@ -112,9 +128,3 @@ class MenuItemSerializerAutomatic(serializers.ModelSerializer):
     # add a new method to the serializer
     def calculate_tax(self, product: MenuItem):
         return product.price * Decimal(1.1)
-
-# or we can use HyperlinkedModelSerializer
-# class MenuItemSerializer(serializers.HyperlinkedModelSerializer):
-#     class Meta:
-#         model = MenuItem
-#         fields = ('id', 'title', 'price', 'inventory', 'category')
