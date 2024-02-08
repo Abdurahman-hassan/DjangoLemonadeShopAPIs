@@ -52,6 +52,7 @@ class MenuItemSerializerManual(serializers.Serializer):
 #     instance.save()
 #     return instance
 
+
 # 2- The second serializer to get all items using a model serializer
 class CategorySerializer(serializers.ModelSerializer):
     """
