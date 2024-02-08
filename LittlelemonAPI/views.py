@@ -5,8 +5,8 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_201_CREATED
 
 from LittlelemonAPI.models import MenuItem, Category
-from LittlelemonAPI.serializers import (MenuItemSerializer, CategorySerializer,
-                                        MenuItemSerializerManual,
+from LittlelemonAPI.serializers import (CategorySerializer,
+                                        MenuItemSerializerManual, MenuItemSerializerAutomatic,
                                         )
 
 
@@ -14,13 +14,13 @@ from LittlelemonAPI.serializers import (MenuItemSerializer, CategorySerializer,
 # Using generics to create, List data
 class MenuItemView(generics.ListCreateAPIView):
     queryset = MenuItem.objects.all()
-    serializer_class = MenuItemSerializer
+    serializer_class = MenuItemSerializerAutomatic
 
 
 # 2- The second view to get a single item
 class SingleMenuItemView(generics.RetrieveUpdateAPIView, generics.DestroyAPIView):
     queryset = MenuItem.objects.all()
-    serializer_class = MenuItemSerializer
+    serializer_class = MenuItemSerializerAutomatic
 
 
 # 3- The third view to get all items
@@ -65,7 +65,7 @@ def menu_items(request):
     # this is used to get the full url of the category
     # because we use HyperlinkedRelatedField in the serializer
     # to get the full url of the category
-    serializer = MenuItemSerializer(menu_items, many=True, context={'request': request})
+    serializer = MenuItemSerializerAutomatic(menu_items, many=True, context={'request': request})
     return Response(serializer.data)
 
 
@@ -74,10 +74,10 @@ def single_item(request, pk):
     if request.method == 'GET':
         menu_item = get_object_or_404(MenuItem, pk=pk)
         # we didn't use many=True because we are only serializing one object
-        serializer = MenuItemSerializer(menu_item)
+        serializer = MenuItemSerializerAutomatic(menu_item)
         return Response(serializer.data)
     if request.method == 'POST':
-        serializer = MenuItemSerializer(data=request.data)
+        serializer = MenuItemSerializerAutomatic(data=request.data)
         # we can use raise_exception=True to raise an exception if the serializer is not valid
         # instead of using if serializer.is_valid()
         # and return a response with status 400 if the serializer is not valid

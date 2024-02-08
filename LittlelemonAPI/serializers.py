@@ -5,7 +5,7 @@ from rest_framework import serializers
 from LittlelemonAPI.models import MenuItem, Category
 
 
-# 1- The first serializer to get all items
+# 1- The first serializer to get all items using a normal serializer
 class MenuItemSerializerManual(serializers.Serializer):
     """
     This is a manual serializer to get all the items using the serializer
@@ -52,6 +52,7 @@ class MenuItemSerializerManual(serializers.Serializer):
 #     instance.save()
 #     return instance
 
+# 2- The second serializer to get all items using a model serializer
 class CategorySerializer(serializers.ModelSerializer):
     """
     This is a serializer to get all the categories using the model serializer
@@ -64,7 +65,10 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ('id', 'slug', 'title')
 
 
-class MenuItemSerializer(serializers.ModelSerializer):
+class MenuItemSerializerAutomatic(serializers.ModelSerializer):
+    """
+    This is a serializer to get all the items using the model serializer
+    """
     # change the name of the field we should add it into fields
     stock = serializers.IntegerField(source='inventory')
     # add a method to the serializer
