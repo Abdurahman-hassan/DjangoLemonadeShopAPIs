@@ -7,10 +7,30 @@ from LittlelemonAPI.models import MenuItem, Category
 
 class MenuItemSerializerManual(serializers.Serializer):
     id = serializers.IntegerField()
-    title = serializers.CharField(max_length=2)
+    title = serializers.CharField(max_length=30)
 
-    # price = serializers.DecimalField(max_digits=6, decimal_places=2)
-    # inventory = serializers.IntegerField()
+    # # this is a method that we can use to change the representation of the data
+    def to_representation(self, instance):
+        # show all the data
+        representation = super().to_representation(instance)
+        # print(representation)
+        # change the title to only show the first 2 characters
+        representation['title'] = representation['title'][:30]
+        return representation
+
+    # or we can use the SerializerMethodField
+    # title = serializers.SerializerMethodField()
+    # def get_title(self, obj):
+    #     # Return the first 30 characters of the title
+    #     return obj.title[:30]
+
+    # or we can use the method name
+    # title = serializers.SerializerMethodField(method_name='get_title')
+    # def get_title(self, obj: MenuItem):
+    #     return obj.title[:30]
+
+    price = serializers.DecimalField(max_digits=6, decimal_places=2)
+    inventory = serializers.IntegerField()
 
 
 # def create(self, validated_data):
