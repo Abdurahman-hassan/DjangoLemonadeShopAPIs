@@ -104,6 +104,7 @@ class MenuItemSerializerAutomatic(serializers.ModelSerializer):
         fields = ['id', 'title',
                   'price', 'stock',
                   'price_after_tax', 'category', 'category_id']
+
         # instead of using categorySerializer() we can use the depth option
         # all relationships in this serializer will display every field related to that model
         # depth = 1
