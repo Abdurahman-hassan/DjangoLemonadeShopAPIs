@@ -67,6 +67,7 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ('id', 'slug', 'title')
 
 
+# 3- The third serializer to get all items using a model serializer
 class MenuItemSerializerAutomatic(serializers.ModelSerializer):
     """
     This is a serializer to get all the items using the model serializer
@@ -80,7 +81,11 @@ class MenuItemSerializerAutomatic(serializers.ModelSerializer):
     price_after_tax = serializers.SerializerMethodField(method_name='calculate_tax')
     # add a field from a related model
     # instead of using the id of the category -> 'category' : 1 by default
-    # it will be 'category' : 'title'
+    # it will be 'category' : 'The first category'
+
+    # this will return the __str__ method of the model
+    # we need also use select_related in the view to get the category in the same query,
+    # not in a separate query for each menu item
     # category = serializers.StringRelatedField()
 
     # we will use a nested serializer

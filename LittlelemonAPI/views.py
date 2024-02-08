@@ -53,8 +53,9 @@ def single_item_basic_fetch_data(request, pk):
 def menu_items(request):
     # select_related is used to get the related object in the same query
     # this is used to avoid the N+1 problem
-    # instead of doing a query for each menu item to get the category
+    # instead of doing a query for each menu item to get the category of the menu item
     # category = Category.objects.get(pk=menu_item.category_id)
+    # we can get the category in the same query
     menu_items = MenuItem.objects.select_related('category').all()
     # return Response(menu_items.values())
 

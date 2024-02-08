@@ -8,7 +8,7 @@ class Category(models.Model):
     title = models.CharField(max_length=255)
 
     def __str__(self) -> str:
-        return self.title
+        return f"{self.title} || {self.menu_items.count()}"
 
 
 class MenuItem(models.Model):
