@@ -52,11 +52,13 @@ class MenuItemSerializerManual(serializers.Serializer):
 #     instance.save()
 #     return instance
 
+
 # 2- The second serializer to get all items using a model serializer
 class CategorySerializer(serializers.ModelSerializer):
     """
     This is a serializer to get all the categories using the model serializer
     """
+
     class Meta:
         """
         This is the metaclass that we use to define the model and the fields that we want to serialize
