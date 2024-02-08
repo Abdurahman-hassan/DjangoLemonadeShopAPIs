@@ -5,12 +5,21 @@ from rest_framework import serializers
 from LittlelemonAPI.models import MenuItem, Category
 
 
+# 1- The first serializer to get all items
 class MenuItemSerializerManual(serializers.Serializer):
+    """
+    This is a manual serializer to get all the items using the serializer
+    """
     id = serializers.IntegerField()
     title = serializers.CharField(max_length=30)
 
     # # this is a method that we can use to change the representation of the data
     def to_representation(self, instance):
+        """
+        This method is used to change the representation of the data
+        :param instance: the instance of the model
+        :return: the representation of the data
+        """
         # show all the data
         representation = super().to_representation(instance)
         # print(representation)
@@ -44,7 +53,13 @@ class MenuItemSerializerManual(serializers.Serializer):
 #     return instance
 
 class CategorySerializer(serializers.ModelSerializer):
+    """
+    This is a serializer to get all the categories using the model serializer
+    """
     class Meta:
+        """
+        This is the metaclass that we use to define the model and the fields that we want to serialize
+        """
         model = Category
         fields = ('id', 'slug', 'title')
 
