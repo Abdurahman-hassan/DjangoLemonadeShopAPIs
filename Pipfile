@@ -11,6 +11,8 @@ djoser = "*"
 django-debug-toolbar = "*"
 djangorestframework-csv = "*"
 djangorestframework-yaml = "*"
+django-seed = "*"
+psycopg2 = "*"
 
 [dev-packages]
 
