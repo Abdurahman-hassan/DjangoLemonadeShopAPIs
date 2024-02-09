@@ -13,6 +13,7 @@ djangorestframework-csv = "*"
 djangorestframework-yaml = "*"
 django-seed = "*"
 psycopg2 = "*"
+ipython = "*"
 
 [dev-packages]
 
