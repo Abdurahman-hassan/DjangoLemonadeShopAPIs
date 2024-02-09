@@ -7,7 +7,7 @@ from LittlelemonAPI.views import (
     menu_items,
     menu_items_save_to_modelDserializer,
     menu_items_basic_fetch_data, single_item_basic_fetch_data, menu_OpenAPIRenderer,
-    menu_TemplateHTMLFormRendererRenderer, menu_StaticHTMLRenderer, menu_CSVRenderer
+    menu_TemplateHTMLFormRendererRenderer, menu_StaticHTMLRenderer, menu_CSVRenderer, menu_YAMLRenderer
 )
 
 urlpatterns = [
@@ -33,6 +33,7 @@ urlpatterns = [
     path('menu-OpenAPIRenderer', menu_OpenAPIRenderer, name='menu-items-api-view'),
     path('menu-templateHtmlFormRenderer', menu_TemplateHTMLFormRendererRenderer, name='menu-items-api-view'),
     path('menu-StaticHTMLRenderer', menu_StaticHTMLRenderer, name='menu-items-api-view'),
+    path('menu_YAMLRenderer', menu_YAMLRenderer, name='menu-items-api-view'),
     path('menu_CSVRenderer', menu_CSVRenderer, name='menu-items-api-view'),
     path('__debug__/', include('debug_toolbar.urls')),
 ]

@@ -5,6 +5,7 @@ from rest_framework.renderers import TemplateHTMLRenderer, OpenAPIRenderer, JSON
 from rest_framework.response import Response
 from rest_framework.status import HTTP_201_CREATED
 from rest_framework_csv.renderers import CSVRenderer
+from rest_framework_yaml.renderers import YAMLRenderer
 
 from LittlelemonAPI.models import MenuItem, Category
 from LittlelemonAPI.serializers import (CategorySerializer,
@@ -145,6 +146,13 @@ def menu_StaticHTMLRenderer(request):
 @api_view(['GET'])
 @renderer_classes([CSVRenderer])
 def menu_CSVRenderer(request):
+    items = MenuItem.objects.select_related('category').all()
+    serialized_item = MenuItemSerializerAutomatic(items, many=True)
+    return Response(serialized_item.data)
+
+@api_view(['GET'])
+@renderer_classes([YAMLRenderer])
+def menu_YAMLRenderer(request):
     items = MenuItem.objects.select_related('category').all()
     serialized_item = MenuItemSerializerAutomatic(items, many=True)
     return Response(serialized_item.data)
