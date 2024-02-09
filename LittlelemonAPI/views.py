@@ -156,3 +156,17 @@ def menu_YAMLRenderer(request):
     items = MenuItem.objects.select_related('category').all()
     serialized_item = MenuItemSerializerAutomatic(items, many=True)
     return Response(serialized_item.data)
+
+# instead of attacging the renderer to the view
+# we add it into the settings.py
+# REST_FRAMEWORK = {
+#     'DEFAULT_RENDERER_CLASSES': [
+#         'rest_framework.renderers.JSONRenderer',
+#         'rest_framework.renderers.BrowsableAPIRenderer',  # this is used to render the browsable api
+#         'rest_framework_xml.renderers.XMLRenderer',  # this is used to render the browsable api
+#         'rest_framework_csv.renderers.CSVRenderer',
+#         'rest_framework_yaml.renderers.YAMLRenderer',
+#     ]
+# }
+
+# Now the client can send the following Accept headers to receive the API output in their desired format.
