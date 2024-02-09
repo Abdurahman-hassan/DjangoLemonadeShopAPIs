@@ -1,8 +1,10 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import generics
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, renderer_classes
+from rest_framework.renderers import TemplateHTMLRenderer, OpenAPIRenderer, JSONOpenAPIRenderer, StaticHTMLRenderer
 from rest_framework.response import Response
 from rest_framework.status import HTTP_201_CREATED
+from rest_framework_csv.renderers import CSVRenderer
 
 from LittlelemonAPI.models import MenuItem, Category
 from LittlelemonAPI.serializers import (CategorySerializer,
@@ -96,7 +98,7 @@ def menu_items_save_to_modelDserializer(request, pk=None):
         serializer.save()
         # we can't access the data if the data is not saved
         # we can access the data after saving it
-        validated_data = serializer.validated_data # this will return a dictionary of the validated data
+        validated_data = serializer.validated_data  # this will return a dictionary of the validated data
         # # we can access the data after saving it
         print(validated_data)
         return Response(serializer.data, status=HTTP_201_CREATED)
@@ -107,3 +109,42 @@ def category_detail(request, pk):
     category = get_object_or_404(Category, pk=pk)
     serialized_category = CategorySerializer(category)
     return Response(serialized_category.data)
+
+
+@api_view()
+@renderer_classes([OpenAPIRenderer])
+def menu_OpenAPIRenderer(request):
+    items = MenuItem.objects.select_related('category').all()
+    serialized_item = MenuItemSerializerAutomatic(items, many=True)
+    return Response({'data': serialized_item.data}, template_name='menu-items.html')
+
+
+@api_view()
+@renderer_classes([JSONOpenAPIRenderer])
+def menu_JsonOpenAPIRenderer(request):
+    items = MenuItem.objects.select_related('category').all()
+    serialized_item = MenuItemSerializerAutomatic(items, many=True)
+    return Response({'data': serialized_item.data}, template_name='menu-items.html')
+
+
+@api_view()
+@renderer_classes([TemplateHTMLRenderer])
+def menu_TemplateHTMLFormRendererRenderer(request):
+    items = MenuItem.objects.select_related('category').all()
+    serialized_item = MenuItemSerializerAutomatic(items, many=True)
+    return Response(data={'data': serialized_item.data}, template_name='menu-items.html')
+
+
+@api_view(['GET'])
+@renderer_classes([StaticHTMLRenderer])
+def menu_StaticHTMLRenderer(request):
+    data = '<html><body><h1>Welcome To Little Lemon API Project</h1></body></html>'
+    return Response(data)
+
+
+@api_view(['GET'])
+@renderer_classes([CSVRenderer])
+def menu_CSVRenderer(request):
+    items = MenuItem.objects.select_related('category').all()
+    serialized_item = MenuItemSerializerAutomatic(items, many=True)
+    return Response(serialized_item.data)
