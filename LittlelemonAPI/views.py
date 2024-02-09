@@ -60,6 +60,7 @@ def menu_items(request):
     # category = Category.objects.get(pk=menu_item.category_id)
     # we can get the category in the same query
     menu_items = MenuItem.objects.select_related('category').all()
+
     # return Response(menu_items.values())
 
     # many=True is used when we want to serialize a queryset
@@ -170,3 +171,30 @@ def menu_YAMLRenderer(request):
 # }
 
 # Now the client can send the following Accept headers to receive the API output in their desired format.
+
+
+@api_view(['GET', 'POST'])
+def menu_items_filter_data(request):
+    if request.method == 'GET':
+        items = MenuItem.objects.select_related('category').all()
+        # category_name = request.GET.get('category')
+        # we can use query_params instead of get
+        category_name = request.query_params.get('category')
+        to_price = request.query_params.get('to_price')
+        search = request.query_params.get('search')
+        if category_name:
+            items = items.filter(category__title=category_name)
+        # to_price = request.GET.get('to_price')
+        if to_price:
+            items = items.filter(price__lte=to_price)
+        if search:
+            # This is a case-insensitive search that matches any part of the title
+            # title is a field in the MenuItem model
+            items = items.filter(title__contains=search)
+        serialized_item = MenuItemSerializerAutomatic(items, many=True)
+        return Response(serialized_item.data)
+    if request.method == 'POST':
+        serialized_item = MenuItemSerializerAutomatic(data=request.data)
+        serialized_item.is_valid(raise_exception=True)
+        serialized_item.save()
+        return Response(serialized_item.validated_data, status=HTTP_201_CREATED)
