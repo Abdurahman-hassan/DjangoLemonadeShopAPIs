@@ -151,12 +151,14 @@ def menu_CSVRenderer(request):
     serialized_item = MenuItemSerializerAutomatic(items, many=True)
     return Response(serialized_item.data)
 
+
 @api_view(['GET'])
 @renderer_classes([YAMLRenderer])
 def menu_YAMLRenderer(request):
     items = MenuItem.objects.select_related('category').all()
     serialized_item = MenuItemSerializerAutomatic(items, many=True)
     return Response(serialized_item.data)
+
 
 # instead of attacging the renderer to the view
 # we add it into the settings.py
@@ -182,6 +184,7 @@ def menu_items_filter_data(request):
         category_name = request.query_params.get('category')
         to_price = request.query_params.get('to_price')
         search = request.query_params.get('search')
+        ordering = request.query_params.get('ordering')
         if category_name:
             items = items.filter(category__title=category_name)
         # to_price = request.GET.get('to_price')
@@ -191,6 +194,13 @@ def menu_items_filter_data(request):
             # This is a case-insensitive search that matches any part of the title
             # title is a field in the MenuItem model
             items = items.filter(title__contains=search)
+        if ordering:
+            # http://127.0.0.1:8000/api/menu_items_filter_data?ordering=-price
+            # this will order the items by price in descending order
+            # items = items.order_by(ordering)
+            # http://127.0.0.1:8000/api/menu_items_filter_data?ordering=-price,inventory
+            ordering_fields = ordering.split(',')
+            items = items.order_by(*ordering_fields)  # or in one line items = items.order_by(*ordering.split(','))
         serialized_item = MenuItemSerializerAutomatic(items, many=True)
         return Response(serialized_item.data)
     if request.method == 'POST':
