@@ -115,6 +115,7 @@ class MenuItemSerializerAutomatic(serializers.ModelSerializer):
     #         fields = ('id', 'title', 'price', 'inventory', 'category')
     # price = serializers.DecimalField(max_digits=6, decimal_places=2, min_value=2)
     price = serializers.DecimalField(max_digits=6, decimal_places=2)
+
     # title = serializers.CharField(
     #     max_length=255,
     #     validators=[UniqueValidator(queryset=MenuItem.objects.all())])
@@ -135,8 +136,8 @@ class MenuItemSerializerAutomatic(serializers.ModelSerializer):
             UniqueTogetherValidator(
                 queryset=MenuItem.objects.all(),
                 fields=['title', 'price']
-            ),
-        ],
+            )
+        ]
 
         extra_kwargs = {
             # 'price': {'min_value': 2, 'max_digits': 6, 'decimal_places': 2},
@@ -155,29 +156,28 @@ class MenuItemSerializerAutomatic(serializers.ModelSerializer):
         # all relationships in this serializer will display every field related to that model
         # depth = 1
 
+    # The 2 errors will appear at the same time
+    # def validate_price(self, value):
+    #     if value is None:
+    #         raise serializers.ValidationError('Price cannot be null')
+    #     if value < Decimal('2.0'):
+    #         raise serializers.ValidationError('Price should not be less than 2.0')
+    #     return value
+    #
+    # def validate_stock(self, value):
+    #     if (value < 0):
+    #         raise serializers.ValidationError('Stock cannot be negative')
+    #     return value
+
+    # or we can use the validate method to validate the data
+    # one error will appear and if we fix it, the other error will appear
+    def validate(self, attrs):
+        if (attrs['price'] < 5):
+            raise serializers.ValidationError('Price should not be less than 5.0')
+        if (attrs['inventory'] < 0):
+            raise serializers.ValidationError('Stock cannot be negative')
+        return super().validate(attrs)
         # add a new method to the serializer
 
-        def calculate_tax(self, product: MenuItem):
-            return product.price * Decimal(1.1)
-
-        # The 2 errors will appear at the same time
-        # def validate_price(self, value):
-        #     if value is None:
-        #         raise serializers.ValidationError('Price cannot be null')
-        #     if value < Decimal('2.0'):
-        #         raise serializers.ValidationError('Price should not be less than 2.0')
-        #     return value
-        #
-        # def validate_stock(self, value):
-        #     if (value < 0):
-        #         raise serializers.ValidationError('Stock cannot be negative')
-        #     return value
-
-        # or we can use the validate method to validate the data
-        # one error will appear and if we fix it, the other error will appear
-        def validate(self, attrs):
-            if (attrs['price'] < 5):
-                raise serializers.ValidationError('Price should not be less than 5.0')
-            if (attrs['inventory'] < 0):
-                raise serializers.ValidationError('Stock cannot be negative')
-            return super().validate(attrs)
+    def calculate_tax(self, product: MenuItem):
+        return product.price * Decimal(1.1)
