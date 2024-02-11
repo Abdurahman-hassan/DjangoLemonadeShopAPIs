@@ -4,7 +4,7 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator, UniqueTogetherValidator
 
 from LittlelemonAPI.models import MenuItem, Category
-
+import bleach
 
 # 1- The first serializer to get all items using a normal serializer
 class MenuItemSerializerManual(serializers.Serializer):
@@ -120,6 +120,37 @@ class MenuItemSerializerAutomatic(serializers.ModelSerializer):
     #     max_length=255,
     #     validators=[UniqueValidator(queryset=MenuItem.objects.all())])
 
+    def validate_title(self, value):
+        return bleach.clean(value)
+
+    # The 2 errors will appear at the same time
+    # def validate_price(self, value):
+    #     if value is None:
+    #         raise serializers.ValidationError('Price cannot be null')
+    #     if value < Decimal('2.0'):
+    #         raise serializers.ValidationError('Price should not be less than 2.0')
+    #     return value
+    #
+    # def validate_stock(self, value):
+    #     if (value < 0):
+    #         raise serializers.ValidationError('Stock cannot be negative')
+    #     return value
+
+    # or we can use the validate method to validate the data
+    # one error will appear and if we fix it, the other error will appear
+    def validate(self, attrs):
+        # we can use the attrs to validate the data
+        attrs['title'] = bleach.clean(attrs['title'])
+        if (attrs['price'] < 5):
+            raise serializers.ValidationError('Price should not be less than 5.0')
+        if (attrs['inventory'] < 0):
+            raise serializers.ValidationError('Stock cannot be negative')
+        return super().validate(attrs)
+        # add a new method to the serializer
+
+    def calculate_tax(self, product: MenuItem):
+        return product.price * Decimal(1.1)
+
     class Meta:
         model = MenuItem
         fields = ['id', 'title',
@@ -155,29 +186,3 @@ class MenuItemSerializerAutomatic(serializers.ModelSerializer):
         # instead of using categorySerializer() we can use the depth option
         # all relationships in this serializer will display every field related to that model
         # depth = 1
-
-    # The 2 errors will appear at the same time
-    # def validate_price(self, value):
-    #     if value is None:
-    #         raise serializers.ValidationError('Price cannot be null')
-    #     if value < Decimal('2.0'):
-    #         raise serializers.ValidationError('Price should not be less than 2.0')
-    #     return value
-    #
-    # def validate_stock(self, value):
-    #     if (value < 0):
-    #         raise serializers.ValidationError('Stock cannot be negative')
-    #     return value
-
-    # or we can use the validate method to validate the data
-    # one error will appear and if we fix it, the other error will appear
-    def validate(self, attrs):
-        if (attrs['price'] < 5):
-            raise serializers.ValidationError('Price should not be less than 5.0')
-        if (attrs['inventory'] < 0):
-            raise serializers.ValidationError('Stock cannot be negative')
-        return super().validate(attrs)
-        # add a new method to the serializer
-
-    def calculate_tax(self, product: MenuItem):
-        return product.price * Decimal(1.1)
