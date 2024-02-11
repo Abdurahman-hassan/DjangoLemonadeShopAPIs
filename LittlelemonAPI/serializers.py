@@ -1,6 +1,7 @@
 from decimal import Decimal
 
 from rest_framework import serializers
+from rest_framework.validators import UniqueValidator, UniqueTogetherValidator
 
 from LittlelemonAPI.models import MenuItem, Category
 
@@ -76,6 +77,7 @@ class MenuItemSerializerAutomatic(serializers.ModelSerializer):
     # it will be stock instead of inventory in the json response
     # {"title": "test_title", "price": "12", "stock": "1", "price_after_tax": 2.0, "category": 1}
     # we should mention the source of the original field "inventory"
+    # stock = serializers.IntegerField(source='inventory', min_value=0)
     stock = serializers.IntegerField(source='inventory')
     # add a method to the serializer, add a new field to the serializer
     price_after_tax = serializers.SerializerMethodField(method_name='calculate_tax')
@@ -111,6 +113,11 @@ class MenuItemSerializerAutomatic(serializers.ModelSerializer):
     #     class Meta:
     #         model = MenuItem
     #         fields = ('id', 'title', 'price', 'inventory', 'category')
+    # price = serializers.DecimalField(max_digits=6, decimal_places=2, min_value=2)
+    price = serializers.DecimalField(max_digits=6, decimal_places=2)
+    # title = serializers.CharField(
+    #     max_length=255,
+    #     validators=[UniqueValidator(queryset=MenuItem.objects.all())])
 
     class Meta:
         model = MenuItem
@@ -122,10 +129,55 @@ class MenuItemSerializerAutomatic(serializers.ModelSerializer):
                   'category_id',
                   'category']
 
+        # that will make the combination of title and price field unique.
+        # With this validation, there will be no duplicate entry of an item with the same price.
+        validators = [
+            UniqueTogetherValidator(
+                queryset=MenuItem.objects.all(),
+                fields=['title', 'price']
+            ),
+        ],
+
+        extra_kwargs = {
+            # 'price': {'min_value': 2, 'max_digits': 6, 'decimal_places': 2},
+            # 'stock': {'source': 'inventory', 'min_value': 0}
+            # To make sure that the title field remains unique in the MenuItems table
+            'title': {
+                'validators': [
+                    UniqueValidator(
+                        queryset=MenuItem.objects.all()
+                    )
+                ],
+            }
+        }
+
         # instead of using categorySerializer() we can use the depth option
         # all relationships in this serializer will display every field related to that model
         # depth = 1
 
-    # add a new method to the serializer
-    def calculate_tax(self, product: MenuItem):
-        return product.price * Decimal(1.1)
+        # add a new method to the serializer
+
+        def calculate_tax(self, product: MenuItem):
+            return product.price * Decimal(1.1)
+
+        # The 2 errors will appear at the same time
+        # def validate_price(self, value):
+        #     if value is None:
+        #         raise serializers.ValidationError('Price cannot be null')
+        #     if value < Decimal('2.0'):
+        #         raise serializers.ValidationError('Price should not be less than 2.0')
+        #     return value
+        #
+        # def validate_stock(self, value):
+        #     if (value < 0):
+        #         raise serializers.ValidationError('Stock cannot be negative')
+        #     return value
+
+        # or we can use the validate method to validate the data
+        # one error will appear and if we fix it, the other error will appear
+        def validate(self, attrs):
+            if (attrs['price'] < 5):
+                raise serializers.ValidationError('Price should not be less than 5.0')
+            if (attrs['inventory'] < 0):
+                raise serializers.ValidationError('Stock cannot be negative')
+            return super().validate(attrs)
