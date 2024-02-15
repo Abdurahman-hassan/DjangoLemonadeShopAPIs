@@ -1,6 +1,6 @@
 from django.core.paginator import Paginator, EmptyPage
 from django.shortcuts import get_object_or_404
-from rest_framework import generics
+from rest_framework import generics, viewsets
 from rest_framework.decorators import api_view, renderer_classes
 from rest_framework.renderers import TemplateHTMLRenderer, OpenAPIRenderer, JSONOpenAPIRenderer, StaticHTMLRenderer
 from rest_framework.response import Response
@@ -217,3 +217,16 @@ def menu_items_filter_data(request):
         serialized_item.is_valid(raise_exception=True)
         serialized_item.save()
         return Response(serialized_item.validated_data, status=HTTP_201_CREATED)
+
+
+class MenuItemModelView(viewsets.ModelViewSet):
+    queryset = MenuItem.objects.all()
+    serializer_class = MenuItemSerializerAutomatic
+    # we can use the filter_backends to filter the data
+    # filter_backends = [DjangoFilterBackend, OrderingFilter]
+    # filterset_fields = ['category', 'price']
+    ordering_fields = ['price', 'inventory']
+    # ordering = ['price']
+    # pagination_class = PageNumberPagination
+    # pagination_class = LimitOffsetPagination
+    # pagination_class = Cursor

@@ -132,5 +132,11 @@ REST_FRAMEWORK = {
         'rest_framework_xml.renderers.XMLRenderer',  # this is used to render the browsable api
         'rest_framework_csv.renderers.CSVRenderer',
         'rest_framework_yaml.renderers.YAMLRenderer',
-    ]
+    ],
+    'DEFAULT_FILTER_BACKENDS': [
+        # using the default pagination class to paginate the data
+        # 'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.SearchFilter',
+        'rest_framework.filters.OrderingFilter',
+    ],
 }
