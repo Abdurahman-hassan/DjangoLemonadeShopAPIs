@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator, EmptyPage
 from django.shortcuts import get_object_or_404
 from rest_framework import generics
 from rest_framework.decorators import api_view, renderer_classes
@@ -185,6 +186,8 @@ def menu_items_filter_data(request):
         to_price = request.query_params.get('to_price')
         search = request.query_params.get('search')
         ordering = request.query_params.get('ordering')
+        perpage = request.query_params.get('perpage', default=2)
+        page = request.query_params.get('page', default=1)
         if category_name:
             items = items.filter(category__title=category_name)
         # to_price = request.GET.get('to_price')
@@ -201,6 +204,12 @@ def menu_items_filter_data(request):
             # http://127.0.0.1:8000/api/menu_items_filter_data?ordering=-price,inventory
             ordering_fields = ordering.split(',')
             items = items.order_by(*ordering_fields)  # or in one line items = items.order_by(*ordering.split(','))
+
+        paginator = Paginator(items, per_page=perpage)
+        try:
+            items = paginator.page(number=page)
+        except EmptyPage:
+            items = []
         serialized_item = MenuItemSerializerAutomatic(items, many=True)
         return Response(serialized_item.data)
     if request.method == 'POST':
