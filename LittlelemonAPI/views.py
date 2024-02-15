@@ -226,7 +226,8 @@ class MenuItemModelView(viewsets.ModelViewSet):
     # filter_backends = [DjangoFilterBackend, OrderingFilter]
     # filterset_fields = ['category', 'price']
     ordering_fields = ['price', 'inventory']
-    # ordering = ['price']
+    ordering = ['price']  # default ordering
+    search_fields = ['title', 'category__title']
     # pagination_class = PageNumberPagination
     # pagination_class = LimitOffsetPagination
     # pagination_class = Cursor
