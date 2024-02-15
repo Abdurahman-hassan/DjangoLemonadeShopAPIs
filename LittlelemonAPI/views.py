@@ -1,7 +1,8 @@
 from django.core.paginator import Paginator, EmptyPage
 from django.shortcuts import get_object_or_404
 from rest_framework import generics, viewsets
-from rest_framework.decorators import api_view, renderer_classes
+from rest_framework.decorators import api_view, renderer_classes, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.renderers import TemplateHTMLRenderer, OpenAPIRenderer, JSONOpenAPIRenderer, StaticHTMLRenderer
 from rest_framework.response import Response
 from rest_framework.status import HTTP_201_CREATED
@@ -231,3 +232,9 @@ class MenuItemModelView(viewsets.ModelViewSet):
     # pagination_class = PageNumberPagination
     # pagination_class = LimitOffsetPagination
     # pagination_class = Cursor
+
+
+@api_view()
+@permission_classes([IsAuthenticated])
+def secret_request(request):
+    return Response({'message': 'This is a secret message'})

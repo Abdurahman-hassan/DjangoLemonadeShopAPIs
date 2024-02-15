@@ -1,4 +1,5 @@
 from django.urls import path, include
+from rest_framework.authtoken.views import obtain_auth_token
 
 from LittlelemonAPI.views import (
     MenuItemView,
@@ -8,7 +9,7 @@ from LittlelemonAPI.views import (
     menu_items_save_to_modelDserializer,
     menu_items_basic_fetch_data, single_item_basic_fetch_data, menu_OpenAPIRenderer,
     menu_TemplateHTMLFormRendererRenderer, menu_StaticHTMLRenderer, menu_CSVRenderer, menu_YAMLRenderer,
-    menu_items_filter_data, MenuItemModelView
+    menu_items_filter_data, MenuItemModelView, secret_request
 )
 
 urlpatterns = [
@@ -40,5 +41,10 @@ urlpatterns = [
 
     path('menu-items-model-viewset', MenuItemModelView.as_view({'get': 'list'}), name='menu-items-model-viewset'),
     path('menu-items-model-viewset/<int:pk>', MenuItemModelView.as_view({'get': 'retrieve'}), name='menu-items-model-viewset'),
+    path('secret_request', secret_request, name='secret_request'),
+
+    # this is provided by the rest_framework drf in-order-to get the token
+    # when we hit post-request to this url we will get the token
+    path('api-token-auth', obtain_auth_token, name='api_token_auth'),
     path('__debug__/', include('debug_toolbar.urls')),
 ]
