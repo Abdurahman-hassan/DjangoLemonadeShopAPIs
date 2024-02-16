@@ -238,3 +238,12 @@ class MenuItemModelView(viewsets.ModelViewSet):
 @permission_classes([IsAuthenticated])
 def secret_request(request):
     return Response({'message': 'This is a secret message'})
+
+
+@api_view()
+@permission_classes([IsAuthenticated])
+def manger_request(request):
+    if request.user.groups.filter(name='Manager').exists():
+        return Response({'message': 'Only the manager can see this message'})
+    else:
+        return Response({'message': 'You are not a manager'}, status=403)

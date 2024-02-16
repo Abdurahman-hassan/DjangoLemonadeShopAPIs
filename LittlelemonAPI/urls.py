@@ -9,7 +9,7 @@ from LittlelemonAPI.views import (
     menu_items_save_to_modelDserializer,
     menu_items_basic_fetch_data, single_item_basic_fetch_data, menu_OpenAPIRenderer,
     menu_TemplateHTMLFormRendererRenderer, menu_StaticHTMLRenderer, menu_CSVRenderer, menu_YAMLRenderer,
-    menu_items_filter_data, MenuItemModelView, secret_request
+    menu_items_filter_data, MenuItemModelView, secret_request, manger_request
 )
 
 urlpatterns = [
@@ -42,6 +42,8 @@ urlpatterns = [
     path('menu-items-model-viewset', MenuItemModelView.as_view({'get': 'list'}), name='menu-items-model-viewset'),
     path('menu-items-model-viewset/<int:pk>', MenuItemModelView.as_view({'get': 'retrieve'}), name='menu-items-model-viewset'),
     path('secret_request', secret_request, name='secret_request'),
+
+    path('manger_request', manger_request, name='manger_request'),
 
     # this is provided by the rest_framework drf in-order-to get the token
     # when we hit post-request to this url we will get the token
