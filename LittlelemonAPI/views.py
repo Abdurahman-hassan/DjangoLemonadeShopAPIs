@@ -1,11 +1,12 @@
 from django.core.paginator import Paginator, EmptyPage
 from django.shortcuts import get_object_or_404
 from rest_framework import generics, viewsets
-from rest_framework.decorators import api_view, renderer_classes, permission_classes
+from rest_framework.decorators import api_view, renderer_classes, permission_classes, throttle_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.renderers import TemplateHTMLRenderer, OpenAPIRenderer, JSONOpenAPIRenderer, StaticHTMLRenderer
 from rest_framework.response import Response
 from rest_framework.status import HTTP_201_CREATED
+from rest_framework.throttling import UserRateThrottle, AnonRateThrottle
 from rest_framework_csv.renderers import CSVRenderer
 from rest_framework_yaml.renderers import YAMLRenderer
 
@@ -13,6 +14,7 @@ from LittlelemonAPI.models import MenuItem, Category
 from LittlelemonAPI.serializers import (CategorySerializer,
                                         MenuItemSerializerManual, MenuItemSerializerAutomatic,
                                         )
+from LittlelemonAPI.throttles import TenCallsPerMinuteThrottle
 
 
 # 1- The first view to get all items
@@ -247,3 +249,18 @@ def manger_request(request):
         return Response({'message': 'Only the manager can see this message'})
     else:
         return Response({'message': 'You are not a manager'}, status=403)
+
+
+# make a non-authenticated user hit 2 times in a minute
+@api_view()
+@throttle_classes([AnonRateThrottle])
+def throttle_check(request):
+    return Response(data={'message': 'successful'}, status=200)
+
+
+# make a non-authenticated user hit 2 times in a minute
+@api_view()
+@permission_classes([IsAuthenticated])
+@throttle_classes([TenCallsPerMinuteThrottle])
+def throttle_check_auth(request):
+    return Response(data={'message': 'successful'}, status=200)

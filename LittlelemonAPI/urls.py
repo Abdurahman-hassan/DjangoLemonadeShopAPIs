@@ -9,7 +9,7 @@ from LittlelemonAPI.views import (
     menu_items_save_to_modelDserializer,
     menu_items_basic_fetch_data, single_item_basic_fetch_data, menu_OpenAPIRenderer,
     menu_TemplateHTMLFormRendererRenderer, menu_StaticHTMLRenderer, menu_CSVRenderer, menu_YAMLRenderer,
-    menu_items_filter_data, MenuItemModelView, secret_request, manger_request
+    menu_items_filter_data, MenuItemModelView, secret_request, manger_request, throttle_check, throttle_check_auth
 )
 
 urlpatterns = [
