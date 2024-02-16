@@ -44,6 +44,8 @@ urlpatterns = [
     path('secret_request', secret_request, name='secret_request'),
 
     path('manger_request', manger_request, name='manger_request'),
+    path('throttle_check', throttle_check, name='throttle_check'),
+    path('throttle_check_auth', throttle_check_auth, name='throttle_check_auth'),
 
     # this is provided by the rest_framework drf in-order-to get the token
     # when we hit post-request to this url we will get the token
