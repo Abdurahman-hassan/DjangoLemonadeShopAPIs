@@ -20,4 +20,24 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('LittlelemonAPI.urls')),
+
+    # djoser urls
+    path('auth/', include('djoser.urls')),
+    path('auth/', include('djoser.urls.authtoken')),
 ]
+
+# there are a lot of djosers urls that we can use
+
+# auth/users/ - list of all users
+# auth/users/me/ - details of the currently logged in user
+# auth/users/confirms/ - confirm email
+# auth/users/resend_activation/ - resend activation email
+# auth/users/set_password/ - set new password
+# auth/users/reset_password/ - reset password
+# auth/users/reset_password_confirm/ - confirm reset password
+# auth/users/set_username/ - set new username
+# auth/users/reset_username/ - reset username
+# auth/users/reset_username_confirm/ - confirm reset username
+# auth/token/login/ - login
+# auth/token/logout/ - logout
+

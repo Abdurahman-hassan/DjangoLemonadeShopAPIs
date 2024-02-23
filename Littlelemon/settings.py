@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'LittlelemonAPI',
     'debug_toolbar',
     'django_seed',
+    'djoser',
 ]
 
 MIDDLEWARE = [
@@ -146,7 +147,10 @@ REST_FRAMEWORK = {
 
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
-        # 'rest_framework.authentication.SessionAuthentication',
+        # If you want to use the Django admin login simultaneously
+        # with a browsable API view of Djoser,
+        # you need to add this session authentication class too.
+        'rest_framework.authentication.SessionAuthentication',
     ],
     'DEFAULT_THROTTLE_RATES': {
         'anon': '2/minute',
@@ -158,4 +162,11 @@ REST_FRAMEWORK = {
         'rest_framework.throttling.AnonRateThrottle',
         'rest_framework.throttling.UserRateThrottle',
     ],
+}
+
+DJOSER = {
+    "USER_ID_FIELD": "id",
+    "PASSWORD_RESET_CONFIRM_URL": "password/reset/confirm/{uid}/{token}",
+    # "LOGIN_FIELD": "email",
+    # "USER_CREATE_PASSWORD_RETYPE": True,
 }
