@@ -153,4 +153,9 @@ REST_FRAMEWORK = {
         'user': '10/day',
         'ten': '10/minute',
     },
+
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle',
+    ],
 }

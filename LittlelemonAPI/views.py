@@ -234,6 +234,18 @@ class MenuItemModelView(viewsets.ModelViewSet):
     # pagination_class = PageNumberPagination
     # pagination_class = LimitOffsetPagination
     # pagination_class = Cursor
+    # throttle_classes = [AnonRateThrottle, UserRateThrottle]
+
+    def get_throttles(self):
+        if self.action == 'create':
+            print('create')
+            throttle_classes = [UserRateThrottle]
+        else:
+            throttle_classes = [TenCallsPerMinuteThrottle]
+            print('else')
+        return [throttle() for throttle in throttle_classes]
+
+
 
 
 @api_view()
