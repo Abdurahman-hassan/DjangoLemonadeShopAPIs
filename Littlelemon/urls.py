@@ -35,7 +35,7 @@ urlpatterns = [
 
 # there are a lot of djosers urls that we can use
 
-# auth/users/ - list of all users
+# auth/users/ - list of all users, create new user if i do a post request with username, email, password
 # auth/users/me/ - details of the currently logged in user
 # auth/users/confirms/ - confirm email
 # auth/users/resend_activation/ - resend activation email
@@ -45,6 +45,6 @@ urlpatterns = [
 # auth/users/set_username/ - set new username
 # auth/users/reset_username/ - reset username
 # auth/users/reset_username_confirm/ - confirm reset username
-# auth/token/login/ - login
+# auth/token/login/ - login ------- i should add user, password of admin through postman or insomnia
 # auth/token/logout/ - logout
 

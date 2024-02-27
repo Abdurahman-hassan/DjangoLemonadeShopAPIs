@@ -9,7 +9,8 @@ from LittlelemonAPI.views import (
     menu_items_save_to_modelDserializer,
     menu_items_basic_fetch_data, single_item_basic_fetch_data, menu_OpenAPIRenderer,
     menu_TemplateHTMLFormRendererRenderer, menu_StaticHTMLRenderer, menu_CSVRenderer, menu_YAMLRenderer,
-    menu_items_filter_data, MenuItemModelView, secret_request, manger_request, throttle_check, throttle_check_auth
+    menu_items_filter_data, MenuItemModelView, secret_request, manger_request, throttle_check, throttle_check_auth,
+    managers_only
 )
 
 urlpatterns = [
@@ -46,6 +47,7 @@ urlpatterns = [
     path('manger_request', manger_request, name='manger_request'),
     path('throttle_check', throttle_check, name='throttle_check'),
     path('throttle_check_auth', throttle_check_auth, name='throttle_check_auth'),
+    path('groups/managers/users/', managers_only),
 
     # this is provided by the rest_framework drf in-order-to get the token
     # when we hit post-request to this url we will get the token

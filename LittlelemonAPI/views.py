@@ -1,8 +1,9 @@
+from django.contrib.auth.models import User, Group
 from django.core.paginator import Paginator, EmptyPage
 from django.shortcuts import get_object_or_404
-from rest_framework import generics, viewsets
+from rest_framework import generics, viewsets, status
 from rest_framework.decorators import api_view, renderer_classes, permission_classes, throttle_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.renderers import TemplateHTMLRenderer, OpenAPIRenderer, JSONOpenAPIRenderer, StaticHTMLRenderer
 from rest_framework.response import Response
 from rest_framework.status import HTTP_201_CREATED
@@ -231,6 +232,7 @@ class MenuItemModelView(viewsets.ModelViewSet):
     ordering_fields = ['price', 'inventory']
     ordering = ['price']  # default ordering
     search_fields = ['title', 'category__title']
+
     # pagination_class = PageNumberPagination
     # pagination_class = LimitOffsetPagination
     # pagination_class = Cursor
@@ -244,8 +246,6 @@ class MenuItemModelView(viewsets.ModelViewSet):
             throttle_classes = [TenCallsPerMinuteThrottle]
             print('else')
         return [throttle() for throttle in throttle_classes]
-
-
 
 
 @api_view()
@@ -276,3 +276,22 @@ def throttle_check(request):
 @throttle_classes([TenCallsPerMinuteThrottle])
 def throttle_check_auth(request):
     return Response(data={'message': 'successful'}, status=200)
+
+
+@api_view(['DELETE', 'POST'])
+@permission_classes([IsAdminUser])
+def managers_only(request):
+    # this give me the username of the admin
+    # username = request.user.username
+    # or
+    # i added the username in the post request username = abdo-djoser
+    username = request.data.get('username')
+    if username:
+        user = get_object_or_404(User, username=username)
+        managers = Group.objects.get(name='Manager')
+        if request.method == 'POST':
+            managers.user_set.add(user)
+        elif request.method == 'DELETE':
+            managers.user_set.remove(user)
+        return Response(data={'message': 'successful'}, status=status.HTTP_200_OK)
+    return Response(data={'message': 'unsuccessful'}, status=status.HTTP_400_BAD_REQUEST)
