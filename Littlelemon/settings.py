@@ -157,9 +157,9 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     ],
     'DEFAULT_THROTTLE_RATES': {
-        'anon': '2/minute',
-        'user': '10/day',
-        'ten': '10/minute',
+        'anon': '50/minute',
+        'user': '500/day',
+        'ten': '10/sec',
     },
 
     'DEFAULT_THROTTLE_CLASSES': [
