@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+from datetime import timedelta
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -41,6 +41,9 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'django_seed',
     'djoser',
+    'rest_framework_simplejwt',
+    # we need to migrate the app to the database
+    'rest_framework_simplejwt.token_blacklist',
 ]
 
 MIDDLEWARE = [
@@ -146,6 +149,7 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 2,
 
     'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.TokenAuthentication',
         # If you want to use the Django admin login simultaneously
         # with a browsable API view of Djoser,
@@ -169,4 +173,12 @@ DJOSER = {
     "PASSWORD_RESET_CONFIRM_URL": "password/reset/confirm/{uid}/{token}",
     # "LOGIN_FIELD": "email",
     # "USER_CREATE_PASSWORD_RETYPE": True,
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    # 'ROTATE_REFRESH_TOKENS': False,
+    # 'BLACKLIST_AFTER_ROTATION': False,
+    # 'UPDATE_LAST_LOGIN': False,
 }

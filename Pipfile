@@ -15,6 +15,7 @@ django-seed = "*"
 psycopg2 = "*"
 ipython = "*"
 bleach = "*"
+djangorestframework-simplejwt = "~=5.2.1"
 
 [dev-packages]
 
