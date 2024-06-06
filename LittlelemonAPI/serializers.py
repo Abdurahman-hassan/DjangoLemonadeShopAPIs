@@ -6,6 +6,7 @@ from rest_framework.validators import UniqueValidator, UniqueTogetherValidator
 from LittlelemonAPI.models import MenuItem, Category
 import bleach
 
+
 # 1- The first serializer to get all items using a normal serializer
 class MenuItemSerializerManual(serializers.Serializer):
     """
